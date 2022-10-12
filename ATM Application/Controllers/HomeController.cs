@@ -30,10 +30,9 @@ namespace ATM_Application.Controllers
             SqlConnection connection = new SqlConnection(connectionstring);
 
             connection.Open();
-            SqlCommand com = new SqlCommand("Select * from user", connection);
-            var execute = com.ExecuteScalar();
-
-            ViewData["TotalData"] = execute;
+            SqlCommand com = new SqlCommand("select count(*) from Users", connection);
+            var count = (int)com.ExecuteScalar();
+            ViewData["TotalData"] = count;
 
             connection.Close();
             return View();
