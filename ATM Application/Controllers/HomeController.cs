@@ -8,34 +8,51 @@ namespace ATM_Application.Controllers
 {
     public class HomeController : Controller
     {
-        //private readonly ILogger<HomeController> _logger;
+        // Get Connection String
+        SqlCommand com = new SqlCommand();
+        SqlDataReader dr;
+        SqlConnection con = new SqlConnection();
+        List<User> users = new List<User>();
+        private readonly ILogger<HomeController> _logger;
 
-        /*public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+            con.ConnectionString = "Data Source=DESKTOP-E93ERMF\\SQLEXPRESS; Integrated Security=true;Initial Catalog= ATM;";
         }
-        */
-
-        private readonly IConfiguration configuration;
-
-        public HomeController(IConfiguration configuration)
-        {
-            this.configuration = configuration;
-        }
-
+        
         public IActionResult Index()
         {
-            string connectionstring = configuration.GetConnectionString("DefaultConnectionString");
+            FetchData();
+            return View(users);
+        }
 
-            SqlConnection connection = new SqlConnection(connectionstring);
+        public void FetchData()
+        {
+            if(users.Count > 0)
+            {
+                users.Clear();
+            }
+            try
+            {
+                con.Open();
+                com.Connection = con;
+                com.CommandText = "SELECT TOP (1000) [id],[name],[amount] FROM [ATM].[dbo].[Users]";
+                dr = com.ExecuteReader();
+                while (dr.Read())
+                {
+                    users.Add(new User() {id = dr["id"].ToString()
+                        ,name = dr["name"].ToString()
+                        ,amount = dr["amount"].ToString(),
+                    });
+                }
+                con.Close();
+            }
+            catch (Exception)
+            {
 
-            connection.Open();
-            SqlCommand com = new SqlCommand("select count(*) from Users", connection);
-            var count = (int)com.ExecuteScalar();
-            ViewData["TotalData"] = count;
-
-            connection.Close();
-            return View();
+                throw;
+            }
         }
 
         public IActionResult Privacy()
