@@ -23,8 +23,9 @@ namespace ATM_Application.Controllers
         
         public IActionResult Index()
         {
-            FetchData();
-            return View(users);
+            //FetchData();
+            User _user = new User();
+            return View(_user);
         }
 
         public void FetchData()
@@ -54,6 +55,21 @@ namespace ATM_Application.Controllers
                 throw;
             }
         }
+
+        [HttpPost]
+        public ActionResult Index(User _user)
+        {
+            //string id = users.id;
+            //string name = users.name;   
+            //string amount = users.amount;
+            string pin = users.pin;
+
+
+
+            return View(_user);
+
+        }
+        
 
         public IActionResult Privacy()
         {
