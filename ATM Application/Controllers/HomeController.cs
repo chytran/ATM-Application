@@ -21,12 +21,6 @@ namespace ATM_Application.Controllers
             con.ConnectionString = "Data Source=DESKTOP-E93ERMF\\SQLEXPRESS; Integrated Security=true;Initial Catalog= ATM;";
         }
         
-        public IActionResult Index()
-        {
-            //FetchData();
-            User _user = new User();
-            return View(_user);
-        }
 
         public void FetchData()
         {
@@ -56,14 +50,21 @@ namespace ATM_Application.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult Index()
+        {
+            User _userModel = new User();
+            return View(_userModel);
+        }
         [HttpPost]
         public ActionResult Index(User _user)
         {
             //string id = users.id;
             //string name = users.name;   
             //string amount = users.amount;
-            string pin = users.pin;
-
+            //string pin = users.pin;
+            User _userContext = new User();
+            var status = _userContext.Users.Where(m => m.pin == _user.pin);
 
 
             return View(_user);
